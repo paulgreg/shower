@@ -10,7 +10,8 @@ window.shower = window.shower || (function(window, document, undefined) {
 		slides = [],
 		progress = [],
 		timer,
-		isHistoryApiSupported = !!(window.history && window.history.pushState);
+		isHistoryApiSupported = !!(window.history && window.history.pushState),
+		disableKeydown = false;
 
 	/**
 	 * Slide constructor
@@ -799,7 +800,15 @@ window.shower = window.shower || (function(window, document, undefined) {
 				body.setAttribute('data-scroll', 'unlocked');
 			}, 200);
 		}
-	}
+	};
+
+    shower.disableKeys = function() {
+        disableKeydown = true;
+    };
+
+    shower.enableKeys = function() {
+        disableKeydown = false;
+    };
 
 	// Event handlers
 
@@ -825,6 +834,9 @@ window.shower = window.shower || (function(window, document, undefined) {
 	}, false);
 
 	document.addEventListener('keydown', function(e) {
+		if (disableKeydown) {
+			return;
+		}
 		var currentSlideNumber = shower.getCurrentSlideNumber(),
 			slide = shower.slideList[currentSlideNumber],
 			slideNumber;
